@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sales Prediction ML</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .field input,
+        .field select {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: #2563eb;
+        }
+
+        .button-container {
+            margin-top: 30px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            text-align: center;
+            border-radius: 12px;
+            background: #eff6ff;
+            display: none;
+        }
+
+        .result p {
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .result h2 {
+            font-size: 32px;
+            color: #2563eb;
+        }
+
+        .error {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fee2e2;
+            color: #b91c1c;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                width: 94%;
+                margin: 20px auto;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>📊 Sales Prediction ML</h1>
+            <p>Machine Learning powered sales prediction system</p>
+        </div>
+
+        <div class="card">
+
+            <h2 class="section-title">Sales Information</h2>
+
+            <form id="salesForm">
+
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label>Branch</label>
+                        <select id="Branch" required>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>City</label>
+                        <select id="City" required>
+                            <option value="Yangon">Yangon</option>
+                            <option value="Mandalay">Mandalay</option>
+                            <option value="Naypyitaw">Naypyitaw</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Customer Type</label>
+                        <select id="Customer_type" required>
+                            <option value="Member">Member</option>
+                            <option value="Normal">Normal</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Gender</label>
+                        <select id="Gender" required>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Product Line</label>
+                        <select id="Product_line" required>
+                            <option value="Health and beauty">
+                                Health and beauty
+                            </option>
+
+                            <option value="Electronic accessories">
+                                Electronic accessories
+                            </option>
+
+                            <option value="Home and lifestyle">
+                                Home and lifestyle
+                            </option>
+
+                            <option value="Sports and travel">
+                                Sports and travel
+                            </option>
+
+                            <option value="Food and beverages">
+                                Food and beverages
+                            </option>
+
+                            <option value="Fashion accessories">
+                                Fashion accessories
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Payment</label>
+                        <select id="Payment" required>
+                            <option value="Ewallet">Ewallet</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Credit card">Credit card</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Unit Price</label>
+                        <input
+                            type="number"
+                            id="Unit_price"
+                            value="74.69"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Quantity</label>
+                        <input
+                            type="number"
+                            id="Quantity"
+                            value="7"
+                            min="1"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Tax 5%</label>
+                        <input
+                            type="number"
+                            id="Tax_5"
+                            value="26.14"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Total</label>
+                        <input
+                            type="number"
+                            id="Total"
+                            value="548.97"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>COGS</label>
+                        <input
+                            type="number"
+                            id="cogs"
+                            value="522.83"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Gross Margin Percentage</label>
+                        <input
+                            type="number"
+                            id="gross_margin_percentage"
+                            value="4.76"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Gross Income</label>
+                        <input
+                            type="number"
+                            id="gross_income"
+                            value="26.14"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Rating</label>
+                        <input
+                            type="number"
+                            id="Rating"
+                            value="9.1"
+                            step="0.1"
+                            min="0"
+                            max="10"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Month</label>
+                        <input
+                            type="number"
+                            id="Month"
+                            value="1"
+                            min="1"
+                            max="12"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Year</label>
+                        <input
+                            type="number"
+                            id="Year"
+                            value="2019"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Day Of Week</label>
+                        <input
+                            type="number"
+                            id="DayOfWeek"
+                            value="1"
+                            min="0"
+                            max="6"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" id="predictBtn">
+                        Predict Sales
+                    </button>
+                </div>
+
+            </form>
+
+            <div class="result" id="resultBox">
+                <p>Predicted Sales</p>
+                <h2 id="result"></h2>
+            </div>
+
+            <div class="error" id="errorBox"></div>
+
+        </div>
+
+        <div class="footer">
+            Built with Python, Scikit-learn, FastAPI & Machine Learning
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const form = document.getElementById("salesForm");
+        const resultBox = document.getElementById("resultBox");
+        const result = document.getElementById("result");
+        const errorBox = document.getElementById("errorBox");
+        const predictBtn = document.getElementById("predictBtn");
+
+
+        form.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            resultBox.style.display = "none";
+            errorBox.style.display = "none";
+
+            predictBtn.disabled = true;
+            predictBtn.innerText = "Predicting...";
+
+
+            const data = {
+
+                Branch: document.getElementById("Branch").value,
+
+                City: document.getElementById("City").value,
+
+                Customer_type:
+                    document.getElementById("Customer_type").value,
+
+                Gender:
+                    document.getElementById("Gender").value,
+
+                Product_line:
+                    document.getElementById("Product_line").value,
+
+                Payment:
+                    document.getElementById("Payment").value,
+
+                Unit_price:
+                    Number(document.getElementById("Unit_price").value),
+
+                Quantity:
+                    Number(document.getElementById("Quantity").value),
+
+                Tax_5:
+                    Number(document.getElementById("Tax_5").value),
+
+                Total:
+                    Number(document.getElementById("Total").value),
+
+                cogs:
+                    Number(document.getElementById("cogs").value),
+
+                gross_margin_percentage:
+                    Number(
+                        document.getElementById(
+                            "gross_margin_percentage"
+                        ).value
+                    ),
+
+                gross_income:
+                    Number(
+                        document.getElementById("gross_income").value
+                    ),
+
+                Rating:
+                    Number(document.getElementById("Rating").value),
+
+                Month:
+                    Number(document.getElementById("Month").value),
+
+                Year:
+                    Number(document.getElementById("Year").value),
+
+                DayOfWeek:
+                    Number(document.getElementById("DayOfWeek").value)
+            };
+
+
+            try {
+
+                const response = await fetch(
+                    "http://127.0.0.1:8000/predict",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(data)
+                    }
+                );
+
+
+                const output = await response.json();
+
+
+                if (!response.ok) {
+                    throw new Error(
+                        output.detail || "Prediction failed"
+                    );
+                }
+
+
+                result.innerText =
+                    "₹ " + output.predicted_sales;
+
+
+                resultBox.style.display = "block";
+
+
+            } catch (error) {
+
+                errorBox.innerText =
+                    "Error: " + error.message;
+
+                errorBox.style.display = "block";
+
+            }
+
+
+            predictBtn.disabled = false;
+            predictBtn.innerText = "Predict Sales";
+
+        });
+
+    </script>
+
+</body>
+
+</html>
